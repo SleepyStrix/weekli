@@ -1,14 +1,15 @@
 /**
  * Created by Collin Walker
  */
-
+	
 //general config
 const useRowNames = false;
  
- 
+ console.log("yonte");
  
 (function() {
 
+	console.log("yeeeeT");
     /////////////////////////////
     // Constructor
     /////////////////////////////
@@ -814,3 +815,4 @@ const useRowNames = false;
     }
 
 }());
+
