@@ -2,6 +2,11 @@
  * Created by Collin Walker
  */
 
+//general config
+const useRowNames = false;
+ 
+ 
+ 
 (function() {
 
     /////////////////////////////
@@ -131,6 +136,11 @@
         var time_attr = this.getAttribute('data-wk-hr');
         var day_attr = this.getAttribute('data-wk-day');
         var wk_id = evt.target.wk_id;
+		
+		//handle the target elements having children
+		if (wk_id == null) {
+			wk_id = evt.target.parentElement.wk_id;
+		}
 
         if(this.classList.contains('available')){
             wk_dragging_state = 'available';
@@ -168,7 +178,11 @@
             var day_attr  = this.getAttribute('data-wk-day');
             var wk_id = evt.target.wk_id;
 
-
+			//handle the target elements having children
+			if (wk_id == null) {
+				wk_id = evt.target.parentElement.wk_id;
+			}
+			
             var cell_match = document.getElementById(wk_id).querySelectorAll("[data-wk-hr= '" + time_attr + "'][data-wk-day= '" + day_attr + "']");
             for (var i = 0; i < cell_match.length; i++) {
                 toggle_state(cell_match[i]);
@@ -450,8 +464,11 @@
         var day_long  = '';
 
         //ADD blank cell column (empty one in top left)
-        th.className = 'wk-day wk-empty';
-        thead.appendChild(th);
+		if (useRowNames) {
+			th.className = 'wk-day wk-empty';
+			thead.appendChild(th);
+		}
+
 
         //ADD day columns
         for(var i = 0; i < weekli_days.length; i++){
@@ -498,9 +515,11 @@
             tr = document.createElement('tr');
             td.setAttribute('data-wk-time-row', hour_attr);
 
-            td.innerHTML = '<span class="wk-time-span"> ' + weekli_hours[k].time + ' <span class="wk-ampm">' + weekli_hours[k].am_pm + '</span> </span> - <span class="wk-time-span">' + weekli_hours[k+1].time + ' <span class="wk-ampm">' + weekli_hours[k+1].am_pm + '</span> </span>';
-            td.className = 'wk-time wk-header';
-            tr.appendChild(td);
+			if (useRowNames) {
+				td.innerHTML = '<span class="wk-time-span"> ' + weekli_hours[k].time + ' <span class="wk-ampm">' + weekli_hours[k].am_pm + '</span> </span> - <span class="wk-time-span">' + weekli_hours[k+1].time + ' <span class="wk-ampm">' + weekli_hours[k+1].am_pm + '</span> </span>';
+				td.className = 'wk-time wk-header';			
+				tr.appendChild(td);
+			}
             //end time row cell
 
             for(var j = 0; j < weekli_days.length; j++){
@@ -551,7 +570,12 @@
             th = document.createElement('th');
             th.setAttribute('data-wk-day-col', day_attr);
             th.className = 'wk-day wk-header';
-            th.colSpan = 2;
+			if (useRowNames) {
+				th.colSpan = 2;
+			} else {
+				th.colSpan = 1;
+			}
+
             th.innerHTML = weekli_days[i];
             tr.appendChild(th);
             //end day header row
@@ -573,7 +597,9 @@
                 //end time cell
 
                 //attach time cell to row
-                tr.appendChild(td);
+				if (useRowNames) {
+					tr.appendChild(td);
+				}
 
                 //start table cell
                 td = document.createElement('td');
